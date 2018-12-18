@@ -17,5 +17,5 @@ fi
 # Common Part
 echo "Running in $ENV mode (switch using $ ENV=<prod|beta> yourcommand)"
 
-
+# Define mirror root for given server
 MIRROR_ROOT=$SCRIPT_ROOT/../oidb-mirror/$( urlToFilename $SERVER )
