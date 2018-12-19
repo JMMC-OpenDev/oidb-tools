@@ -28,15 +28,62 @@ function syncCollection(){
 
 #
 # Create meta data file or skip if already present
-# if metadata filename is not given, using ${1}.xml
+# metadata filename suffix OIFITS file with .xml
 #
 function genMeta(){
     OIFITS_FILE="$1"
-    OIFITS_META="${2:-$1.xml}"
+    OIFITS_META="${OIFITS_FILE}.xml"
+    OIFITS_GRANULES="${OIFITS_FILE}.granules"
+    OIFITS_URL=$(cat ${OIFITS_FILE}.url | tr -d "\n")
+
+    # generate main metadata file
     if [ ! -e "${OIFITS_META}" ] 
     then 
         java -cp $OITOOLS_JAR fr.jmmc.oitools.OIFitsViewer "${OIFITS_FILE}" > "${OIFITS_META}"
     fi
+
+#   <target>
+#   <target_name>v1295_Aql</target_name>
+#   <s_ra>300.75834000000003</s_ra>
+#   <s_dec>5.737778</s_dec>
+#   <t_exptime>0.0</t_exptime>
+#   <t_min>52808.357037037145</t_min>
+#   <t_max>52808.42348379642</t_max>
+#   <em_res_power>6.6666665</em_res_power>
+#   <em_min>1.65E-6</em_min>
+#   <em_max>1.65E-6</em_max>
+#   <facility_name>IOTA_AB</facility_name>
+#   <instrument_name>IONIC3_v1</instrument_name>
+#   <nb_vis>0</nb_vis>
+#   <nb_vis2>33</nb_vis2>
+#   <nb_t3>11</nb_t3>
+#   <nb_channels>1</nb_channels>
+#   </target>
+
+
+    # transform into xml granules
+    if [ ! -e "${OIFITS_GRANULES}" ] 
+    then 
+    if ! xml sel -I -t -e granules \
+            -m //target -e granule -c "./*" \
+            -e access_url        -o "${OIFITS_URL}" -b \
+            -e access_estsize    -v 'floor(//size div 1000)' -b \
+            -e access_format     -o "application/fits" -b \
+            $OIFITS_META > $OIFITS_GRANULES
+# TO FIX or retrieve on oidb
+#            -e obs_collection    -o "$COLLECTION" -b \
+#            -e obs_id            -v "//keyword[name='HIERARCH.ESO.OBS.PROG.ID']/value" -b \
+#            -e obs_publisher_did -o "$OBS_PUBLISHER_DID" -b \
+#            -e obs_creator_name  -o "$OBS_CREATOR_NAME" -b \
+#            -e calib_level       -o "$CALIBLEVEL" -b \
+#            -e data_rights       -o "$DATA_RIGHTS" -b \
+#            -m "//keyword[starts-with(name,'ASSON')]" -e datalink -e access_url -v "concat('$BASEURL', '/',value)" -b -c "document(concat('meta/',value,'.xml'))/meta/*" -b \
+        then
+        echo "ERROR: pb during parsing of $OIFITS_META "
+        exit 1
+        fi
+    fi
+     
 }
 
 #
@@ -45,8 +92,17 @@ function genMeta(){
 #
 function genDatalinks(){
     OIFITS_FILE="$1"
+    OIFITS_META="${OIFITS_FILE}.xml"
+    OIFITS_GRANULES="${OIFITS_FILE}.granules"
     DATALINK_DIR=$OIFITS_FILE.datalinks
     mkdirIfMissing $DATALINK_DIR
+
+    xml sel -t -m "//granule" -v "position()" -n $OIFITS_GRANULES
+
+
+    #java -jar -png  -mode multi -dims 600,400 -open .oixp 
+
+
 }
 
 
@@ -66,6 +122,7 @@ function syncFileFromUrl(){
   NORM_COLLNAME=$(normCollName $COLLECTION)
   COLL_PATH=$MIRROR_ROOT/$NORM_COLLNAME
   MIRROR_FILENAME="$COLL_PATH/$NORM_URL"
+  MIRROR_FILENAME_URL=$MIRROR_FILENAME.url
 
   #prepare parent dir
   mkdirIfMissing "$(dirname $MIRROR_FILENAME)"
@@ -77,6 +134,9 @@ function syncFileFromUrl(){
           echo "ERROR: can't retrieve $URL into $MIRROR_FILENAME"
           return 1
       fi
+  fi
+  if [ ! -f "$MIRROR_FILENAME_URL" ] ; then 
+      echo $URL > $MIRROR_FILENAME_URL
   fi
 }
 
