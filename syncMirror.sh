@@ -35,7 +35,7 @@ function normCollName(){
     echo -n "$*" | tr -c "[^a-zA-Z0-9\\-_\\.]" "_"
 }
 
-function mkdirIfNotPresent(){
+function mkdirIfMissing(){
   for DIR_PATH in $* 
   do
       if [ ! -d "$DIR_PATH" ] ; then mkdir -pv $DIR_PATH ; fi
@@ -47,7 +47,7 @@ function syncCollection(){
 
   NORM_COLL_NAME=$(normCollName $COLLECTION)
   COLL_PATH=$MIRROR_ROOT/$NORM_COLL_NAME
-  mkdirIfNotPresent "$COLL_PATH"
+  mkdirIfMissing "$COLL_PATH"
   COLL_META=${COLL_PATH}.xml
   COLL_METAURL=${COLLECTIONS_URL}/$(uriencode $COLLECTION)
 
@@ -63,10 +63,21 @@ function syncCollection(){
           echo -n "present : "
   fi
   xml sel -t -v "//title" $COLL_META
-
-
-
 }
+
+#
+# Create meta data file or skip if meta is already present
+# if metadata filename is not given, using ${1}.xml
+#
+function genMeta(){
+    OIFITS_FILE="$1"
+    OIFITS_META="${2:-$1.xml}"
+    if [ ! -e "${OIFITS_META}" ] 
+    then 
+        java -cp $OITOOLS_JAR fr.jmmc.oitools.OIFitsViewer "${OIFITS_FILE}" > "${OIFITS_META}"
+    fi
+}
+
 
 function syncUrl(){
   URL="$1"
@@ -81,17 +92,18 @@ function syncUrl(){
   NORM_URL=$(urlToFilename $URL)
   NORM_COLLNAME=$(normCollName $COLLECTION)
   COLL_PATH=$MIRROR_ROOT/$NORM_COLLNAME
-  MIRROR_PATH="$COLL_PATH/$NORM_URL"
+  MIRROR_FILENAME="$COLL_PATH/$NORM_URL"
   #prepare parent dir
-  mkdirIfNotPresent "$(dirname $MIRROR_PATH)"
+  mkdirIfMissing "$(dirname $MIRROR_FILENAME)"
 
   # Download if not present
-  if [ ! -f "$MIRROR_PATH" ] ; then 
-      if ! wget -q $URL -O $MIRROR_PATH
+  if [ ! -f "$MIRROR_FILENAME" ] ; then 
+      if ! wget -q $URL -O $MIRROR_FILENAME
       then 
-          echo "ERROR: can't retrieve $URL into $MIRROR_PATH"
+          echo "ERROR: can't retrieve $URL into $MIRROR_FILENAME"
       fi
   fi
+  genMeta "$MIRROR_FILENAME"
 
 }
 
