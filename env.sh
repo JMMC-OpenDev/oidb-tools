@@ -3,6 +3,8 @@
 # SCRIPT_ROOT=$(dirname $(readlink -f $0))
 # source $SCRIPT_ROOT/env.sh
 
+# source common functions
+source $SCRIPT_ROOT/functions.sh
 
 # Env dependant Part
 if [ "$ENV" = "prod" ]
@@ -22,3 +24,5 @@ MIRROR_ROOT=$SCRIPT_ROOT/../oidb-mirror/$( urlToFilename $SERVER )
 
 # Define OIExplorerJar
 OITOOLS_JAR=$SCRIPT_ROOT/OIFitsExplorer.jar
+
+
