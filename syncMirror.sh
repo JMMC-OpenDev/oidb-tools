@@ -87,8 +87,34 @@ function genMeta(){
 }
 
 #
-# Create datalink files or skip if already present
-# if metadata filename is not given, using ${1}.xml
+#
+#
+function genOIXP(){
+  OIFITS_FILE="${1}"
+  GRANULE_XML="${2}"
+  GRANULE_OIXP="${3}"
+  
+  # TODO select proper template : oidb-template-low_res.oixp or oidb-template-med_high_res.oixp
+  OIXP_TMPL=$SCRIPT_ROOT/oidb-template-low_res.oixp
+  
+  cp $OIXP_TMPL $GRANULE_OIXP
+  TARGET_NAME=$(xml sel -t -v "//target_name" $GRANULE_XML)
+  # update fields 
+  # TODO fixx all field updates
+  xml ed -L -u "//file/name" -v "$(basename $OIFITS_FILE)" -u "//file/file" -v "$OIFITS_FILE" -u "//target/target" -v "$TARGET_NAME" -u "//filter/targetUID" -v "$TARGET_NAME" $GRANULE_OIXP
+}
+
+#
+#
+#
+function genPNG(){
+  GRANULE_OIXP="${1}"
+  GRANULE_PNG="${GRANULE_OIXP/.oixp/.png}"
+  echo java -jar $OITOOLS_JAR -png $GRANULE_PNG -mode single -dims 1200,800 -open $GRANULE_OIXP
+}
+
+#
+# Create datalink files per granules or skip if dir already present
 #
 function genDatalinks(){
     OIFITS_FILE="$1"
@@ -97,15 +123,23 @@ function genDatalinks(){
     DATALINK_DIR=$OIFITS_FILE.datalinks
     mkdirIfMissing $DATALINK_DIR
 
-    xml sel -t -m "//granule" -v "position()" -n $OIFITS_GRANULES
-
-
-    #java -jar -png  -mode multi -dims 600,400 -open .oixp 
-
+    GRANULES_CNT=$(xml sel -t -v "count(//granule)" $OIFITS_GRANULES)
+    
+    for g in $( seq 1 $GRANULES_CNT )
+    do
+        GRANULE_PREFIX=$DATALINK_DIR/granule${g}
+        GRANULE_XML=$GRANULE_PREFIX.xml
+        GRANULE_OIXP="${GRANULE_XML/.xml/.oixp}"
+        GRANULE_PNG=$GRANULE_PREFIX.png
+        if [ ! -e "$GRANULE_PNG" ] 
+        then
+            xml sel -t -c "//granule[$g]" $OIFITS_GRANULES > $GRANULE_XML
+            genOIXP $OIFITS_FILE $GRANULE_XML $GRANULE_OIXP
+            genPNG  $GRANULE_OIXP
+        fi
+    done
 
 }
-
-
 
 function syncFileFromUrl(){
   URL="$1"
@@ -168,7 +202,7 @@ echo "Done"
 
 # synchronize remote urls onto local mirror
 echo "Syncing '$SERVER' files into $MIRROR_ROOT ..."
-cat access_urls.txt | while read url collection; do syncFileFromUrl $url $collection ; done
+#cat access_urls.txt | while read url collection; do syncFileFromUrl $url $collection ; done
 echo "Done"
 
 # generate metadata files 
