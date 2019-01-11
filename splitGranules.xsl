@@ -21,9 +21,9 @@
 <xsl:text>META_</xsl:text>
 <xsl:value-of select="translate(name(), 'abcdefghijklmnopqrstuvwxyz',
 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
-<xsl:text>='</xsl:text>
+<xsl:text>="</xsl:text>
 <xsl:value-of select="."/>
-<xsl:text>'</xsl:text>
+<xsl:text>"</xsl:text>
 <xsl:value-of select="'&#10;'"/>
 </xsl:for-each>
 </exslt:document>
