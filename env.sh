@@ -20,7 +20,8 @@ fi
 echo "Running in $ENV mode (switch using $ ENV=<prod|beta> yourcommand)"
 
 # Define mirror root for given server
-MIRROR_ROOT=$SCRIPT_ROOT/../oidb-mirror/$( urlToFilename $SERVER )
+MIRROR_ROOT=$(readlink -m "$SCRIPT_ROOT/../oidb-mirror/$( urlToFilename $SERVER)")
+
 
 # Define OIExplorerJar
 OITOOLS_JAR=$SCRIPT_ROOT/OIFitsExplorer.jar
