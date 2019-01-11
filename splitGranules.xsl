@@ -16,8 +16,8 @@
 <xsl:copy-of select="."/>
 </exslt:document>
 
-<exslt:document href="granule_{id}.env">
-<xsl:copy-of select="."/>
+<exslt:document href="granule_{id}.env" method="text">
+<xsl:for-each select="*">
 <xsl:text>META_</xsl:text>
 <xsl:value-of select="translate(name(), 'abcdefghijklmnopqrstuvwxyz',
 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
