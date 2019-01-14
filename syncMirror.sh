@@ -9,8 +9,7 @@ function syncCollection(){
   COLLECTION="$1"
 
   NORM_COLL_NAME=$(normCollName $COLLECTION)
-  COLL_PATH=$MIRROR_ROOT/$NORM_COLL_NAME
-#  mkdirIfMissing "$COLL_PATH"
+  COLL_PATH=$COLLECTIONS_ROOT_DIR/$NORM_COLL_NAME
   COLL_META=${COLL_PATH}.xml
   COLL_METAURL=${COLLECTIONS_URL}/$(uriencode $COLLECTION)
 
@@ -57,7 +56,7 @@ function genDATALINK(){
   #GRANULE_OIXP
   #GRANULE_PNG
   # TODO test if file is present ?
-  ACCESS_URL=http://apps.jmmc.fr/blah/$(basename $GRANULE_PNG)
+  ACCESS_URL=${DATALINK_FILES_ROOT_URL}/$(basename $GRANULE_PNG)
   CONTENT_LENGTH=$(stat -c '%s' $GRANULE_PNG)
   
   echo "<datalink> <access_url>$ACCESS_URL</access_url> <description>Quick plot</description> <content_type>application/png</content_type> <content_length>$CONTENT_LENGTH</content_length></datalink>" > $DATALINK_FILE
@@ -132,12 +131,17 @@ function syncFileFromUrl(){
 
 # Main program entry point
 
-# common directories
+# common directories and root urls
 GRANULE_FILES_ROOT_DIR=$MIRROR_ROOT/OIDB-GRANULES
+GRANULE_FILES_ROOT_URL=${SERVER}/OIDB-GRANULES
 DATALINK_FILES_ROOT_DIR=$MIRROR_ROOT/OIDB-DATALINKS
+DATALINK_FILES_ROOT_URL=${SERVER}/OIDB-DATALINKS
 OIFITS_ROOT_DIR=$MIRROR_ROOT/OIFITS
+OIFITS_ROOT_URL=${SERVER}/OIFITS
+COLLECTIONS_ROOT_DIR=$MIRROR_ROOT/COLLECTIONS
+COLLECTIONS_ROOT_URL=${SERVER}/COLLECTIONS
 
-mkdirIfMissing "$GRANULE_FILES_ROOT_DIR" "$DATALINK_FILES_ROOT_DIR" "$OIFITS_ROOT_DIR"
+mkdirIfMissing "$GRANULE_FILES_ROOT_DIR" "$DATALINK_FILES_ROOT_DIR" "$OIFITS_ROOT_DIR" "$COLLECTIONS_ROOT_DIR"
 
 # check that we have got an associated MIRROR directory
 if [ ! -d "$MIRROR_ROOT" ] 
@@ -167,8 +171,10 @@ GRANULES_ENDPOINT=${SERVER}/restxq/oidb/mirror/granules
 if [ ! -e granules.xml ] 
 then 
   if ! wget $GRANULES_ENDPOINT -O granules.xml ; then echo "ERROR: Can not retrieve granules ($GRANULES_ENDPOINT)... exiting!" ; exit ; fi
+  echo "Done"
+else
+  echo "Skipped"
 fi
-echo "Done"
 
 # synchronize remote urls onto local mirror
 echo "- Build granule files ..."
