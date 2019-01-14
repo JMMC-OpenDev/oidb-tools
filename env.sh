@@ -26,4 +26,6 @@ MIRROR_ROOT=$(readlink -m "$SCRIPT_ROOT/../oidb-mirror/$( urlToFilename $SERVER)
 # Define OIExplorerJar
 OITOOLS_JAR=$SCRIPT_ROOT/OIFitsExplorer.jar
 
+export PATH=~bourgesl/jdk1.8.0_121/bin:$PATH
+echo "PATH modified : $PATH"
 

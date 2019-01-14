@@ -11,3 +11,8 @@ collection of oifits. OiDB manages its own record IDs (one per granule)
 
 If an external tools try to update some metadata it must send back to OiDB the
 initial composite key elements (target, instrument, date, oifits)
+
+OIDATA directory could be shared accrossed various instance
+generated data per instances are located into:
+- OIDB-GRANULES
+
