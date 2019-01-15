@@ -134,18 +134,6 @@ function syncFileFromUrl(){
 
 # Main program entry point
 
-# common directories and root urls
-GRANULE_FILES_ROOT_DIR=$MIRROR_ROOT/OIDB-GRANULES
-GRANULE_FILES_ROOT_URL=${SERVER}/OIDB-GRANULES
-COLLECTIONS_ROOT_DIR=$MIRROR_ROOT/OIDB-COLLECTIONS
-COLLECTIONS_ROOT_URL=${SERVER}/OIDB-COLLECTIONS
-DATALINK_FILES_ROOT_DIR=$MIRROR_ROOT/DATALINKS
-DATALINK_FILES_ROOT_URL=${SERVER}/DATALINKS
-OIFITS_ROOT_DIR=$MIRROR_ROOT/OIFITS
-OIFITS_ROOT_URL=${SERVER}/OIFITS
-
-mkdirIfMissing "$GRANULE_FILES_ROOT_DIR" "$COLLECTIONS_ROOT_DIR" "$DATALINK_FILES_ROOT_DIR" "$OIFITS_ROOT_DIR" 
-
 # check that we have got an associated MIRROR directory
 if [ ! -d "$MIRROR_ROOT" ] 
 then 
@@ -185,19 +173,6 @@ genGranuleFiles
 echo "Done"
 
 # generate datalink files from granule files
-echo "- Generate datalink files ..."
+echo "- Generate datalink files (this also download the file if not yet present) ..."
 find $GRANULE_FILES_ROOT_DIR -name "*.env" | while read granulefile; do genDatalinksFromGranule $granulefile ; done
-echo "Done"
-
-echo "curl -n -H 'Content-type:application/xml' --data @/data/oidb-mirror/oidb-beta.jmmc.fr/OIDB-DATALINKS/datalinks_386162.xml $SERVER/restxq/oidb/datalink"
-exit $GMTMP
-
-# generate metadata files 
-echo "- Generate metadata files ..."
-find . -name "*.*fits" | while read file; do genMeta $file ; done
-echo "Done"
-
-# generate datalink files
-echo "- Generate datalink files ..."
-find . -name "*.*fits" | while read file; do genDatalinks $file ; done
 echo "Done"
