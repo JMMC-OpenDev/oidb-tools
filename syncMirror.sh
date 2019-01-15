@@ -45,7 +45,7 @@ function genOIXP(){
 #
 #
 function genPNG(){
-  java -jar $OITOOLS_JAR -png $GRANULE_PNG -mode single -dims 1200,800 -open $GRANULE_OIXP &> ${GRANULE_PNG}.log
+  java -Djava.awt.headless=true -jar  $OITOOLS_JAR -png $GRANULE_PNG -mode single -dims 1200,800 -open $GRANULE_OIXP &> ${GRANULE_PNG}.log
 }
 
 #
@@ -58,8 +58,10 @@ function genDATALINK(){
   # TODO test if file is present ?
   ACCESS_URL=${DATALINK_FILES_ROOT_URL}/$(basename $GRANULE_PNG)
   CONTENT_LENGTH=$(stat -c '%s' $GRANULE_PNG)
-  
-  echo "<datalink> <access_url>$ACCESS_URL</access_url> <description>Quick plot</description> <content_type>application/png</content_type> <content_length>$CONTENT_LENGTH</content_length></datalink>" > $DATALINK_FILE
+  if [ -e "$GRANULE_PNG" ]
+  then
+      echo "<datalink id='${META_ID}'> <access_url>$ACCESS_URL</access_url> <description>Quick plot</description> <content_type>application/png</content_type> <content_length>$CONTENT_LENGTH</content_length></datalink>" > $DATALINK_FILE
+  fi
 
 }
 
@@ -72,6 +74,7 @@ function genDatalinksFromGranule(){
 
   GRANULE_ENV="$1"
   source $GRANULE_ENV # load metadata as META_xxx variables
+
  
   # define env var for subcommands
   OIFITS_FILE=$(syncFileFromUrl "${META_ACCESS_URL}")
@@ -134,14 +137,14 @@ function syncFileFromUrl(){
 # common directories and root urls
 GRANULE_FILES_ROOT_DIR=$MIRROR_ROOT/OIDB-GRANULES
 GRANULE_FILES_ROOT_URL=${SERVER}/OIDB-GRANULES
-DATALINK_FILES_ROOT_DIR=$MIRROR_ROOT/OIDB-DATALINKS
-DATALINK_FILES_ROOT_URL=${SERVER}/OIDB-DATALINKS
+COLLECTIONS_ROOT_DIR=$MIRROR_ROOT/OIDB-COLLECTIONS
+COLLECTIONS_ROOT_URL=${SERVER}/OIDB-COLLECTIONS
+DATALINK_FILES_ROOT_DIR=$MIRROR_ROOT/DATALINKS
+DATALINK_FILES_ROOT_URL=${SERVER}/DATALINKS
 OIFITS_ROOT_DIR=$MIRROR_ROOT/OIFITS
 OIFITS_ROOT_URL=${SERVER}/OIFITS
-COLLECTIONS_ROOT_DIR=$MIRROR_ROOT/COLLECTIONS
-COLLECTIONS_ROOT_URL=${SERVER}/COLLECTIONS
 
-mkdirIfMissing "$GRANULE_FILES_ROOT_DIR" "$DATALINK_FILES_ROOT_DIR" "$OIFITS_ROOT_DIR" "$COLLECTIONS_ROOT_DIR"
+mkdirIfMissing "$GRANULE_FILES_ROOT_DIR" "$COLLECTIONS_ROOT_DIR" "$DATALINK_FILES_ROOT_DIR" "$OIFITS_ROOT_DIR" 
 
 # check that we have got an associated MIRROR directory
 if [ ! -d "$MIRROR_ROOT" ] 
@@ -185,8 +188,8 @@ echo "Done"
 echo "- Generate datalink files ..."
 find $GRANULE_FILES_ROOT_DIR -name "*.env" | while read granulefile; do genDatalinksFromGranule $granulefile ; done
 echo "Done"
-exit $GAG
 
+echo "curl -n -H 'Content-type:application/xml' --data @/data/oidb-mirror/oidb-beta.jmmc.fr/OIDB-DATALINKS/datalinks_386162.xml $SERVER/restxq/oidb/datalink"
 exit $GMTMP
 
 # generate metadata files 
