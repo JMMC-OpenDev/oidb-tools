@@ -12,11 +12,12 @@
 <xsl:template match="/">
 <xsl:for-each select="//granule[not(obs_collection='PIONIER')]">
 <!-- XML fragment -->
-<exslt:document href="granule_{id}.xml">
+<exslt:document href="{data_rights}/granule_{id}.xml">
 <xsl:copy-of select="."/>
 </exslt:document>
 
-<exslt:document href="granule_{id}.env" method="text">
+<exslt:document href="{data_rights}/granule_{id}.env" method="text">
+<xsl:comment># Please find associate xml granule in <xsl:value-of select="data_rights"/> directory</xsl:comment>
 <xsl:for-each select="*">
 <xsl:text>META_</xsl:text>
 <xsl:value-of select="translate(name(), 'abcdefghijklmnopqrstuvwxyz',
