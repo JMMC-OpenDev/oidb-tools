@@ -56,7 +56,7 @@ function genDATALINK(){
   #GRANULE_OIXP
   #GRANULE_PNG
   # TODO test if file is present ?
-  ACCESS_URL=${DATALINK_FILES_ROOT_URL}/$(basename $GRANULE_PNG)
+  ACCESS_URL=${DATALINK_FILES_ROOT_URL}/${META_DATA_RIGHTS}/$(basename $GRANULE_PNG)
   CONTENT_LENGTH=$(stat -c '%s' $GRANULE_PNG)
   if [ -e "$GRANULE_PNG" ]
   then
@@ -78,9 +78,9 @@ function genDatalinksFromGranule(){
  
   # define env var for subcommands
   OIFITS_FILE=$(syncFileFromUrl "${META_ACCESS_URL}")
-  GRANULE_OIXP="${DATALINK_FILES_ROOT_DIR}/granule_$META_ID.oixp"
+  GRANULE_OIXP="${DATALINK_FILES_ROOT_DIR}/${META_DATA_RIGHTS}/granule_$META_ID.oixp"
   GRANULE_PNG="${GRANULE_OIXP/.oixp/.png}"
-  DATALINK_FILE="${DATALINK_FILES_ROOT_DIR}/datalinks_$META_ID.xml"
+  DATALINK_FILE="${DATALINK_FILES_ROOT_DIR}/${META_DATA_RIGHTS}/datalinks_$META_ID.xml"
   if [ ! -e "$GRANULE_OIXP" ] ; then genOIXP ; fi
   if [ ! -e "$GRANULE_PNG" ] ; then genPNG ; fi
   if [ ! -e "$DATALINK_FILE" ] ; then genDATALINK ; fi
