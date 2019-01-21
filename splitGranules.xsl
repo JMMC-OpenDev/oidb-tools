@@ -10,7 +10,7 @@
   _______________________________________________________________________________________________________
 -->
 <xsl:template match="/">
-<xsl:for-each select="//granule[not(obs_collection='PIONIER')]">
+<xsl:for-each select="//granule">
 <!-- XML fragment -->
 <exslt:document href="{data_rights}/granule_{id}.xml">
 <xsl:copy-of select="."/>
