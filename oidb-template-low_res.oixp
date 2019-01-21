@@ -9,9 +9,11 @@
     </file>
     <subsetDefinition>
         <id>SUBSET_0</id>
-        <target>
-            <target>R_Car</target>
-        </target>
+        <filter>
+            <targetUID>[[targetUID]]</targetUID>
+            <insModeUID>[[insModeUID]]</insModeUID>
+            <nightId>[[nightId]]</nightId>
+        </filter>
     </subsetDefinition>
     <plotDefinition>
         <id>PLOT_DEF_0</id>

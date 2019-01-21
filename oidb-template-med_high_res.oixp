@@ -10,8 +10,9 @@
     <subsetDefinition>
         <id>SUBSET_0</id>
         <filter>
-            <targetUID>T_Lep</targetUID>
-            <insModeUID>GRAVITY_SC</insModeUID>
+            <targetUID>[[targetUID]]</targetUID>
+            <insModeUID>[[insModeUID]]</insModeUID>
+            <nightId>[[nightId]]</nightId>
         </filter>
     </subsetDefinition>
     <plotDefinition>
