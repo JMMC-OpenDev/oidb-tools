@@ -28,12 +28,15 @@ function syncCollection(){
 }
 
 #
-#
+# Choose med-high or low mode template depending on NB_CHANNELS meta
 #
 function genOIXP(){
-  # TODO select proper template : oidb-template-low_res.oixp or oidb-template-med_high_res.oixp
-  # may depend on META_EM_RES_POWER....
-  OIXP_TMPL=$SCRIPT_ROOT/oidb-template-low_res.oixp
+  if [ "$META_NB_CHANNELS" -gt 8 ] ; 
+  then 
+      OIXP_TMPL=$SCRIPT_ROOT/oidb-template-med_high_res.oixp
+  else
+      OIXP_TMPL=$SCRIPT_ROOT/oidb-template-low_res.oixp
+  fi
   
   cp $OIXP_TMPL $GRANULE_OIXP
   # update fields 
@@ -55,14 +58,12 @@ function genDATALINK(){
   #OIFITS_FILE
   #GRANULE_OIXP
   #GRANULE_PNG
-  # TODO test if file is present ?
   ACCESS_URL=${DATALINK_FILES_ROOT_URL}/${META_DATA_RIGHTS}/$(basename $GRANULE_PNG)
   CONTENT_LENGTH=$(stat -c '%s' $GRANULE_PNG)
   if [ -e "$GRANULE_PNG" ]
   then
       echo "<datalink id='${META_ID}'> <access_url>$ACCESS_URL</access_url> <description>Quick plot</description> <content_type>application/png</content_type> <content_length>$CONTENT_LENGTH</content_length></datalink>" > $DATALINK_FILE
   fi
-
 }
 
 
@@ -75,16 +76,18 @@ function genDatalinksFromGranule(){
   GRANULE_ENV="$1"
   source $GRANULE_ENV # load metadata as META_xxx variables
 
+  URL="$(fixUrl ${META_ACCESS_URL} ${SERVER})"
+  # define valid names and paths
+  NORM_URL=$(urlToFilename $URL)
+  OIFITS_FILE="$OIFITS_ROOT_DIR/$NORM_URL"
+  syncFileFromUrl  "$URL" "$OIFITS_FILE"
  
-  # define env var for subcommands
-  OIFITS_FILE=$(syncFileFromUrl "${META_ACCESS_URL}")
   GRANULE_OIXP="${DATALINK_FILES_ROOT_DIR}/${META_DATA_RIGHTS}/granule_$META_ID.oixp"
   GRANULE_PNG="${GRANULE_OIXP/.oixp/.png}"
   DATALINK_FILE="${DATALINK_FILES_ROOT_DIR}/${META_DATA_RIGHTS}/datalinks_$META_ID.xml"
-  if [ ! -e "$GRANULE_OIXP" ] ; then genOIXP ; fi
-  if [ ! -e "$GRANULE_PNG" ] ; then genPNG ; fi
-  if [ ! -e "$DATALINK_FILE" ] ; then genDATALINK ; fi
-  genDATALINK 
+ #  if [ ! -e "$GRANULE_OIXP" ] ; then genOIXP ; fi
+ # if [ ! -e "$GRANULE_PNG" ] ; then genPNG ; fi
+ # if [ ! -e "$DATALINK_FILE" ] ; then genDATALINK ; fi
 }
 
 
@@ -107,19 +110,10 @@ function getGranuleFile(){
 function syncFileFromUrl(){
   if [ -z "$1" ] ; then return ; fi # ignore op without args 
   URL="$1"
-
-  # Fix internal URLS:
-  if ! echo $URL | grep "://" &> /dev/null 
-  then
-    URL=$SERVER$URL
-  fi
-
-  # define valid names and paths
-  NORM_URL=$(urlToFilename $URL)
-  MIRROR_FILENAME="$OIFITS_ROOT_DIR/$NORM_URL"
+  MIRROR_FILENAME="$2"
 
   #prepare parent dirs
-  mkdirIfMissing "$(dirname $MIRROR_FILENAME)" 
+  mkdirIfMissing "$(dirname $MIRROR_FILENAME)"  
 
   # Download if not present
   if [ ! -f "$MIRROR_FILENAME" ] ; then 
@@ -127,9 +121,10 @@ function syncFileFromUrl(){
       then 
           echo "ERROR: can't retrieve $URL into $MIRROR_FILENAME"
           return 1
+      else 
+          echo "INFO: '$MIRROR_FILENAME' retrieved"
       fi
   fi
-  echo $MIRROR_FILENAME
 }
 
 # Main program entry point

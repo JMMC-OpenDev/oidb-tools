@@ -2,11 +2,25 @@
 # common functions
 #
 
+# remove schema part so given url can map to a file path
 function urlToFilename(){
-    URL="$1"
-    # remove schem part
-    echo "${URL##*://}"
+  URL="$1"
+  echo "${URL##*://}"
 }
+
+# Fix internal URLS with SERVER prefix if :// is missing
+function fixUrl(){
+  URL="$1"
+  SERVER="$2"
+
+  if ! echo $URL | grep "://" &> /dev/null 
+  then
+    URL="${SERVER}${URL}"
+  fi
+
+  echo $URL
+}
+
 
 function normCollName(){
 # Mimic StringUtils.java
