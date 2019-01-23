@@ -2,6 +2,21 @@
 # common functions
 #
 
+# just exec the programm after install of trap
+# using:
+#   trap abortExec ERR
+abortExec(){
+  echo "Error occured, aborting program"
+  exit
+}
+
+# echoDone
+echoDone(){
+  # we could get terminal width to clean (override) the previous info line 
+  # echo -ne "blah\r"
+  echo "Done                                                                                 "
+}
+ 
 # remove schema part so given url can map to a file path
 function urlToFilename(){
   URL="$1"
