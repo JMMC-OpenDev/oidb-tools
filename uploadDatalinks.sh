@@ -13,9 +13,9 @@ echo "- Create whole datalink file into $datalinksfile..."
 echo "<datalinks>" > $datalinksfile
 find $DATALINK_FILES_ROOT_DIR -name "*.xml" | while read datalinkfile; do cat $datalinkfile >> $datalinksfile; done
 echo "</datalinks>" >> $datalinksfile
-echo "Done"
+echoDone
 
 
 echo "- Create whole datalink file into $datalinksfile..."
 echo curl -n -H 'Content-type:application/xml' --data @$datalinksfile $SERVER/restxq/oidb/datalink
-echo "Done"
+echoDone
