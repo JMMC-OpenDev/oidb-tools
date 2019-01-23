@@ -51,6 +51,7 @@ function genPNG(){
   #installTrap next cmd may return error code
   if ! java -Djava.awt.headless=true -jar  $OITOOLS_JAR -png $GRANULE_PNG -mode single -dims 1200,800 -open $GRANULE_OIXP &> ${GRANULE_PNG}.log
   then 
+      mv ${GRANULE_PNG}.log ${GRANULE_PNG}.err
       echo  "Can't generate PNG : $GRANULE_PNG"
   fi
 }
