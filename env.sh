@@ -5,7 +5,7 @@
 
 # source common functions
 source $SCRIPT_ROOT/functions.sh
-trap abortExec ERR
+installTrap 
 
 # Env dependant Part
 if [ "$ENV" = "prod" ]

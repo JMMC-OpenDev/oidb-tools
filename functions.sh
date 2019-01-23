@@ -10,6 +10,14 @@ abortExec(){
   exit
 }
 
+#
+#
+# call this function in main program to exit on error
+# you also must call it inside functions where error must not occur
+installTrap(){
+  trap abortExec ERR
+}
+
 # echoDone
 echoDone(){
   # we could get terminal width to clean (override) the previous info line 
