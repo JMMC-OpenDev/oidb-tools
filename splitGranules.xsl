@@ -24,12 +24,16 @@
 'ABCDEFGHIJKLMNOPQRSTUVWXYZ')"/>
 <xsl:text>="</xsl:text>
 <xsl:value-of select="."/>
-<xsl:text>"</xsl:text>
-<xsl:value-of select="'&#10;'"/>
+<xsl:text>"&#10;</xsl:text>
 </xsl:for-each>
+
+<!-- Add some extra computed METADATA -->
+
+<xsl:text>METAX_NIGHTID="</xsl:text>
+<xsl:value-of select="round(./t_min)"/>
+<xsl:text>"&#10;</xsl:text>
+
 </exslt:document>
-
-
 </xsl:for-each>
 </xsl:template>
 </xsl:stylesheet>
