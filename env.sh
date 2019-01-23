@@ -5,6 +5,7 @@
 
 # source common functions
 source $SCRIPT_ROOT/functions.sh
+trap abortExec ERR
 
 # Env dependant Part
 if [ "$ENV" = "prod" ]
@@ -27,7 +28,7 @@ MIRROR_ROOT=$(readlink -m "$SCRIPT_ROOT/../oidb-mirror/$( urlToFilename $SERVER)
 OITOOLS_JAR=$SCRIPT_ROOT/OIFitsExplorer.jar
 
 export PATH=~bourgesl/jdk1.8.0_121/bin:$PATH
-echo "PATH modified : $PATH"
+#echo "PATH modified : $PATH"
 
 
 # Define common directories and root urls
