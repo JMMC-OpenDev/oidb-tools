@@ -18,7 +18,7 @@ else
 fi
 
 # Common Part
-echo "Running in $ENV mode (switch using $ ENV=<prod|beta> yourcommand)"
+echo "Running in $ENV mode (switch using $ ENV=<prod|beta> yourcommand) on $(date)"
 
 # Define mirror root for given server
 MIRROR_ROOT=$(readlink -m "$SCRIPT_ROOT/../oidb-mirror/$( urlToFilename $SERVER)")

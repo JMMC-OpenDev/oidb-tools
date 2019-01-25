@@ -69,6 +69,8 @@ function genDATALINK(){
   then
       CONTENT_LENGTH=$(stat -c '%s' $GRANULE_PNG)
       echo "<datalink id='${META_ID}'> <access_url>$ACCESS_URL</access_url> <description>Quick plot</description> <content_type>application/png</content_type> <content_length>$CONTENT_LENGTH</content_length></datalink>" > $DATALINK_FILE
+      else
+      rm $DATALINK_FILE
   fi
 }
 
@@ -83,13 +85,13 @@ function genDatalinksFromGranule(){
   GRANULE_ENV="$1"
   source $GRANULE_ENV # load metadata as META_xxx variables
 
-  if [ "$META_OBS_COLLECTION" = "PIONIER" ]
-  then
-    echo -ne "genDatalinksFromGranule IGNORE $META_OBS_COLLECTION for collection $META_OBS_COLLECTION\r"
-    return
-  else
+#  if [ "$META_OBS_COLLECTION" = "PIONIER" ]
+#  then
+#    echo -ne "genDatalinksFromGranule IGNORE $META_OBS_COLLECTION for collection $META_OBS_COLLECTION\r"
+#    return
+#  else
     echo -ne "genDatalinksFromGranule $META_OBS_COLLECTION"
-  fi
+#  fi
 
   URL="$(fixUrl ${META_ACCESS_URL} ${SERVER})"
   # define valid names and paths
