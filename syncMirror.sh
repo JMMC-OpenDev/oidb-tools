@@ -70,7 +70,7 @@ function genDATALINK(){
       CONTENT_LENGTH=$(stat -c '%s' $GRANULE_PNG)
       echo "<datalink id='${META_ID}'> <access_url>$ACCESS_URL</access_url> <description>Quick plot</description> <content_type>application/png</content_type> <content_length>$CONTENT_LENGTH</content_length></datalink>" > $DATALINK_FILE
       else
-      rm $DATALINK_FILE
+      rm -f $DATALINK_FILE
   fi
 }
 
@@ -105,7 +105,7 @@ function genDatalinksFromGranule(){
   # Download if not present
   if [ ! -s "$OIFITS_FILE" ] ; then 
       # cleanup children files
-      rm $GRANULE_OIXP $GRANULE_PNG $GRANULE_PNG.log $DATALINK_FILE &> /dev/null
+      rm -f $GRANULE_OIXP $GRANULE_PNG $GRANULE_PNG.log $DATALINK_FILE &> /dev/null
       syncFileFromUrl  "$URL" "$OIFITS_FILE" || return $?
   fi
   if [ ! -s "$GRANULE_OIXP" ] ; then genOIXP ; fi
