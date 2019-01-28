@@ -18,4 +18,7 @@ echoDone
 
 echo "- Create whole datalink file into $datalinksfile..."
 echo curl -n -H 'Content-type:application/xml' --data @$datalinksfile $SERVER/restxq/oidb/datalink
+
+
+echo "WARNING: please do not move the DATALINKS directory which is (the inode) certainly in use on the data container(s)"
 echoDone
