@@ -90,7 +90,7 @@ function genDatalinksFromGranule(){
 #    echo -ne "genDatalinksFromGranule IGNORE $META_OBS_COLLECTION for collection $META_OBS_COLLECTION\r"
 #    return
 #  else
-    echo -ne "genDatalinksFromGranule $META_OBS_COLLECTION"
+    echo -ne "genDatalinksFromGranule $META_OBS_COLLECTION $META_ACCESS_URL                                \r"
 #  fi
 
   URL="$(fixUrl ${META_ACCESS_URL} ${SERVER})"
@@ -144,7 +144,7 @@ function syncFileFromUrl(){
   if ! wget -q $URL -O $MIRROR_FILENAME
   then 
       echo "ERROR: can't retrieve $URL into $MIRROR_FILENAME"
-      return 1
+      #return 1
   else 
       echo "INFO: '$MIRROR_FILENAME' retrieved"
   fi
