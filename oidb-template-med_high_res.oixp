@@ -65,7 +65,7 @@
         <id>PLOT_DEF_2</id>
         <name>PLOT_DEF_2</name>
         <skipFlaggedData>true</skipFlaggedData>
-        <drawLine>false</drawLine>
+        <drawLine>true</drawLine>
         <colorMapping>WavelengthRange</colorMapping>
         <xAxis>
             <name>EFF_WAVE</name>
@@ -85,7 +85,7 @@
         <id>PLOT_DEF_3</id>
         <name>PLOT_DEF_3</name>
         <skipFlaggedData>true</skipFlaggedData>
-        <drawLine>false</drawLine>
+        <drawLine>true</drawLine>
         <colorMapping>WavelengthRange</colorMapping>
         <xAxis>
             <name>EFF_WAVE</name>
