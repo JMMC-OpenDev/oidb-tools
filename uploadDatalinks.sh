@@ -16,7 +16,7 @@ echo "</datalinks>" >> $datalinksfile
 echoDone
 
 
-echo "- Create whole datalink file into $datalinksfile..."
+echo "- Upload datalink file onto $SERVER ..."
 echo curl -n -H 'Content-type:application/xml' --data @$datalinksfile $SERVER/restxq/oidb/datalink
 
 
