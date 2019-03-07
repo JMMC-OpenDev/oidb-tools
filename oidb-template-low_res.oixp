@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <ns2:oiDataCollection xmlns:ns2="http://www.jmmc.fr/oiexplorer-data-collection/0.1">
     <schemaVersion>2013.4</schemaVersion>
+    <!-- template: oidb-template-low_res.oixp -->
     <file>
         <id>OIDB_FILE</id>
         <name>[[OIFITS_FILE_NAME]]</name>
