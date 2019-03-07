@@ -4,8 +4,8 @@
 <!-- 
   _______________________________________________________________________________________________________
 
-  Create in the current directory a granule document per granule (that is not part of PIONIER collection)
-  a shell file is also assocaited so it can be sourced
+  Create in the current directory a granule document per granule
+  a shell file is also associated so it can be sourced
   
   _______________________________________________________________________________________________________
 -->
