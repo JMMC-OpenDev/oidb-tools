@@ -13,7 +13,7 @@ SECURED_COLLECTIONS="PIONIER iota"
 HTACCESSDIR=${DATALINK_FILES_ROOT_DIR}/secure
 HTACCESSFILE=${HTACCESSDIR}/.htaccess.$CURRENTDATE
 
-echo "- Create .htaccess file into $HTACCESSDIR..."
+echo "- Create .htaccess file into $HTACCESSDIR ..."
 cd $HTACCESSDIR
 
 # create header file 
@@ -54,6 +54,7 @@ do
 done
 
 cp $HTACCESSFILE .htaccess
+echo "  $PWD/.htaccess installed"
 
 cd - &>/dev/null
 
