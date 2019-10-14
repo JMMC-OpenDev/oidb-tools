@@ -166,7 +166,7 @@ echo "- Working into $MIRROR_ROOT"
 COLLECTIONS_URL=${SERVER}/restxq/oidb/collection
 if ! wget -q $COLLECTIONS_URL -O collections.xml ; then echo "ERROR: Can not retrieve collections ($COLLECTIONS_URL)... exiting!" ; exit ; fi
 
-# prepare collection directories 
+# prepare collection directories
 echo "- Syncing collections ..."
 xml sel -t -m "//collection" -v "@id" -n collections.xml | while read collection; do syncCollection $collection ; done
 echoDone
@@ -182,7 +182,7 @@ then
   if ! wget $GRANULES_ENDPOINT -O granules.xml ; then echo "ERROR: Can not retrieve granules ($GRANULES_ENDPOINT)... exiting!" ; exit ; fi
   echoDone
 else
-  echo "Skipped"
+  echo "Skipped ($PWD/granules.xml already present)"
 fi
 
 # synchronize remote urls onto local mirror
