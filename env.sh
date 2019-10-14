@@ -2,20 +2,20 @@
 # using next code
 # SCRIPT_ROOT=$(dirname $(readlink -f $0))
 # source $SCRIPT_ROOT/env.sh
+# you can run your command with ENV=<type> to_run_it_in_right_env.sh
 
 # source common functions
 source $SCRIPT_ROOT/functions.sh
 installTrap 
 
 # Env dependant Part
-if [ "$ENV" = "prod" ]
-then
-  ENV=prod
-  export SERVER=http://oidb.jmmc.fr
-else
-  ENV=beta
-  export SERVER=http://oidb-beta.jmmc.fr
-fi
+case "$ENV" in 
+  localhost ) export SERVER=http://localhost/exist/apps/oidb ;; 
+  local8080 ) export SERVER=http://localhost:8080/exist/apps/oidb ;; 
+  test) export SERVER=http://test-oidb.jmmc.fr ;; 
+  prod) export SERVER=http://oidb.jmmc.fr ;;
+  *) export SERVER=http://oidb-beta.jmmc.fr ; export ENV=beta ;; 
+esac
 
 # Common Part
 echo "Running in $ENV mode (switch using $ ENV=<prod|beta> yourcommand) on $(date)"
@@ -42,6 +42,4 @@ OIFITS_ROOT_DIR=$MIRROR_ROOT/OIFITS
 OIFITS_ROOT_URL=${SERVER}/OIFITS
 
 mkdirIfMissing "$GRANULE_FILES_ROOT_DIR" "$COLLECTIONS_ROOT_DIR" "$DATALINK_FILES_ROOT_DIR/secure" "$DATALINK_FILES_ROOT_DIR/public" "$OIFITS_ROOT_DIR" 
-
-
 
