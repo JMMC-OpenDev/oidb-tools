@@ -80,6 +80,10 @@ function genDATALINK(){
 #
 function genDatalinksFromGranule(){
   installTrap
+  
+  LOCKFILE=${1}.doing  
+  if ! lockfile -r 0 $LOCKFILE &> /dev/null ; then return ; fi
+
   if [ -z "$1" ] ; then return ; fi # ignore op without args 
 
   GRANULE_ENV="$1"
@@ -110,7 +114,8 @@ function genDatalinksFromGranule(){
   fi
   if [ ! -s "$GRANULE_OIXP" ] ; then genOIXP ; fi
   if [ ! -s "$GRANULE_PNG" ] ; then genPNG ; fi
-  if [ ! -e "$DATALINK_FILE" ] ; then genDATALINK ; fi
+  if [ ! -s "$DATALINK_FILE" ] ; then genDATALINK ; fi
+  rm -f $LOCKFILE
 }
 
 
