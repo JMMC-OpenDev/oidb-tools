@@ -42,7 +42,7 @@ EOFa
 # and loop for every secured collection
 for col in $SECURED_COLLECTIONS
 do
-  echo -n "  - requesting htaccess for '$col' collection"
+  echo -n "  - requesting htaccess for '$col' collection on $SERVER"
   if curl -n -o .htaccess.$col $SERVER/modules/htaccess.xql?obs_collection=$col &> /dev/null
   then
     echo -e " \t[OK]"
