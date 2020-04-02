@@ -12,8 +12,8 @@ installTrap
 case "$ENV" in 
   localhost ) export SERVER=http://localhost/exist/apps/oidb ;; 
   local8080 ) export SERVER=http://localhost:8080/exist/apps/oidb ;; 
-  test) export SERVER=http://test-oidb.jmmc.fr ;; 
   prod) export SERVER=http://oidb.jmmc.fr ;;
+  preprod) export SERVER=http://oidb-preprod.jmmc.fr ;;
   *) export SERVER=http://oidb-beta.jmmc.fr ; export ENV=beta ;; 
 esac
 
