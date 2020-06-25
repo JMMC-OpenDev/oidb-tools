@@ -48,11 +48,12 @@ function genOIXP(){
 #
 #
 function genPNG(){
-
+  # on fait le ménage avant l'operation :)
+  rm ${GRANULE_PNG}.err
   if ! java -Djava.awt.headless=true -Dfix.bad.uid=true -jar  $OITOOLS_JAR -png $GRANULE_PNG -mode single -dims 1200,800 -open $GRANULE_OIXP &> ${GRANULE_PNG}.log
   then 
       mv ${GRANULE_PNG}.log ${GRANULE_PNG}.err
-      echo  "Can't generate PNG : $GRANULE_PNG"
+      echo  "Can't generate PNG : $GRANULE_PNG for $GRANULE_OIXP"
   fi
 }
 
@@ -145,8 +146,11 @@ function syncFileFromUrl(){
 
   #prepare parent dirs
   mkdirIfMissing "$(dirname $MIRROR_FILENAME)"  
-
-  if ! wget -q $URL -O $MIRROR_FILENAME
+  if grep "apps.jmmc.fr/oidata" $URL &> /dev/null 
+  then 
+      echo "SEVERE: ignore $URL : file must already be present as $MIRROR_FILENAME"
+      exit
+  elif ! wget -q $URL -O $MIRROR_FILENAME
   then 
       echo "ERROR: can't retrieve $URL into $MIRROR_FILENAME"
       #return 1
