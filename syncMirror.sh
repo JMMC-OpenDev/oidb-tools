@@ -49,7 +49,7 @@ function genOIXP(){
 #
 function genPNG(){
   # on fait le ménage avant l'operation :)
-  rm ${GRANULE_PNG}.err
+  rm ${GRANULE_PNG}.err &> /dev/null
   if ! java -Djava.awt.headless=true -Dfix.bad.uid=true -jar  $OITOOLS_JAR -png $GRANULE_PNG -mode single -dims 1200,800 -open $GRANULE_OIXP &> ${GRANULE_PNG}.log
   then 
       mv ${GRANULE_PNG}.log ${GRANULE_PNG}.err
@@ -146,7 +146,7 @@ function syncFileFromUrl(){
 
   #prepare parent dirs
   mkdirIfMissing "$(dirname $MIRROR_FILENAME)"  
-  if grep "apps.jmmc.fr/oidata" $URL &> /dev/null 
+  if echo $URL | grep "apps.jmmc.fr/oidata" &> /dev/null 
   then 
       echo "SEVERE: ignore $URL : file must already be present as $MIRROR_FILENAME"
       exit
