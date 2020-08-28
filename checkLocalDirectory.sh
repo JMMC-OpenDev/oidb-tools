@@ -27,7 +27,5 @@ echo -n "  - # png.log files  : "
 find $DATALINK_FILES_ROOT_DIR -name "*.png.log" |wc -l
 echo -n "  - # png.err files  : "
 find $DATALINK_FILES_ROOT_DIR -name "*.png.err" |wc -l
-echoDone
-
 
 echoDone
