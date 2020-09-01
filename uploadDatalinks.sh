@@ -9,14 +9,14 @@ CURRENTDATE=${CURRENTDATE%%+*}
 datalinksfile=$MIRROR_ROOT/datalinkstoupload-$CURRENTDATE.xml
 
 
-echo "- Create whole datalink file into $datalinksfile..."
+echo "- Create whole datalink file from '$DATALINK_FILES_ROOT_DIR' into '$datalinksfile'..."
 echo "<datalinks>" > $datalinksfile
 find $DATALINK_FILES_ROOT_DIR -name "*.xml" | while read datalinkfile; do cat $datalinkfile >> $datalinksfile; done
 echo "</datalinks>" >> $datalinksfile
 echoDone
 
 
-echo "- Upload datalink file onto $SERVER ..."
+echo "- Upload datalink file onto '$SERVER' ..."
 echo curl -n -H 'Content-type:application/xml' --data @$datalinksfile $SERVER/restxq/oidb/datalink
 
 

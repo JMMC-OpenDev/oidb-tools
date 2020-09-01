@@ -7,8 +7,8 @@ source $SCRIPT_ROOT/env.sh
 CURRENTDATE=$(date -uIs)
 CURRENTDATE=${CURRENTDATE%%+*}
 
-#TODO extract list of collections to iterate onto from granules.xml
-SECURED_COLLECTIONS="PIONIER iota"
+# get list of SECURED_COLLECTIONS to iterate onto
+source $ENV_GRANULES_FILE
 
 HTACCESSDIR=${DATALINK_FILES_ROOT_DIR}/secure
 HTACCESSFILE=${HTACCESSDIR}/.htaccess.$CURRENTDATE
@@ -25,7 +25,6 @@ AuthType Basic
 <Limit GET>
   require user jmmcpoweruser
 </Limit>
-
 
 <Files "*.log">
   Allow from all

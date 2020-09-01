@@ -6,10 +6,32 @@
 
   Create in the current directory a granule document per granule
   a shell file is also associated so it can be sourced
-  
+
+  a granule
   _______________________________________________________________________________________________________
 -->
 <xsl:template match="/">
+
+<exslt:document href="../granules_ids.txt" method="text">
+<xsl:text># auto generated --</xsl:text>
+<xsl:for-each select="//granule">
+<xsl:value-of select="id"/>
+<xsl:text>&#10;</xsl:text>
+</xsl:for-each>
+</exslt:document>
+
+<exslt:document href="../granules.env" method="text">
+<xsl:text># common env vars&#10;</xsl:text>
+<xsl:text># auto generated&#10;</xsl:text>
+<xsl:text>SECURED_COLLECTIONS="</xsl:text>
+<xsl:for-each select="set:distinct(//granule[data_rights='secure']/obs_collection)">
+<xsl:value-of select="."/>
+<xsl:text> </xsl:text>
+</xsl:for-each>
+<xsl:text>"</xsl:text>
+</exslt:document>
+
+
 <xsl:for-each select="//granule">
 <!-- XML fragment -->
 <exslt:document href="{data_rights}/granule_{id}.xml">
