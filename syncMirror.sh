@@ -186,7 +186,7 @@ echo "- Retrieve granules ..."
 # retrieve files ( xml -> csv )
 GRANULES_ENDPOINT=${SERVER}/restxq/oidb/mirror/granules
 # TODO add -f option to force resync
-if [ ! -e granules.xml ] 
+if [ granules.xml -ot $COLLECTIONS_ROOT_DIR ] 
 then 
   if ! wget $GRANULES_ENDPOINT -O granules.xml ; then echo "ERROR: Can not retrieve granules ($GRANULES_ENDPOINT)... exiting!" ; exit ; fi
   echoDone
