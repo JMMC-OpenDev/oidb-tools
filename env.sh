@@ -8,6 +8,9 @@
 source $SCRIPT_ROOT/functions.sh
 installTrap 
 
+# exit on error
+set -e
+
 # Env dependant Part
 case "$ENV" in 
   localhost ) export SERVER=http://localhost/exist/apps/oidb ;; 
